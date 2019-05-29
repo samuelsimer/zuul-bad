@@ -34,23 +34,27 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room islaCalabera, puerto, islaMonos, cataratas, islaDulce, islaTortuga, islaTesoro;
       
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        islaCalabera = new Room("en la isla de las calaberas");
+        puerto = new Room("en el puerto");
+        islaMonos = new Room("en la isla de los monos");
+        cataratas = new Room("en las cataratas");
+        islaDulce = new Room("en la isla de los dulces");
+        islaTortuga = new Room("en la isla de las tortugas");
+        islaTesoro = new Room("en a la isla del tesoro");
         
         // initialise room exits
-        outside.setExits(null, theater, lab, pub);
-        theater.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        lab.setExits(outside, office, null, null);
-        office.setExits(null, null, null, lab);
+        puerto.setExits(islaCalabera, null, islaDulce, islaMonos);
+        islaCalabera.setExits(null, null, puerto, null);        
+        islaMonos.setExits(null, puerto, cataratas, null);
+        cataratas.setExits(islaMonos, islaTortuga, null, null);
+        islaDulce.setExits(puerto, null, null, islaTortuga);
+        islaTortuga.setExits(null, islaDulce, islaTesoro, cataratas);
+        islaTesoro.setExits(islaTortuga, null, null, null);
 
-        currentRoom = outside;  // start game outside
+        currentRoom = puerto;  // start game in puerto
     }
 
     /**
