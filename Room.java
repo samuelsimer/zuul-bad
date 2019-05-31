@@ -14,13 +14,13 @@
  */
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
-    public Room southeastExit;
-
+    private String description;
+    private Room northExit;
+    private Room southExit;
+    private Room eastExit;
+    private Room westExit;
+    private Room southEastExit;
+    private Room northWestExit;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -41,7 +41,7 @@ public class Room
      * @param west The west exit.
      * * @param west The southwest exit.
      */
-    public void setExits(Room north, Room east, Room south, Room west, Room southeast) 
+    public void setExits(Room north, Room east, Room south, Room west, Room northeast, Room southeast) 
     {
         if(north != null)
             northExit = north;
@@ -52,7 +52,9 @@ public class Room
         if(west != null)
             westExit = west;
         if(southeast != null)
-            southeastExit = southeast;
+            southEastExit = southeast;
+        if(northeast != null)
+            northWestExit = northeast;
     }
 
     /**
@@ -60,6 +62,56 @@ public class Room
      */
     public String getDescription()
     {
+        return description;
+    }
+    
+    public Room getExit(String direccion){
+        Room roomReturn = null;
+        
+        if(direccion.equals("north")){
+            roomReturn = northExit;
+        }
+        if(direccion.equals("south")){
+            roomReturn = southExit;
+        }
+        if(direccion.equals("east")){
+            roomReturn = eastExit;
+        }
+        if(direccion.equals("west")){
+            roomReturn = westExit;
+        }
+        if(direccion.equals("northeast")){
+            roomReturn = northWestExit;
+        }
+        if(direccion.equals("southeast")){
+            roomReturn = southEastExit;
+        }
+        
+        return roomReturn;
+    }
+    
+    public String getExitString(){
+        String description = "Exit: ";
+        
+        if(northExit != null) {
+           description += "north ";
+        }
+        if(eastExit != null) {
+            description += "east ";
+        }
+        if(southExit != null) {
+            description += "south ";
+        }
+        if(westExit != null) {
+            description += "west ";
+        }
+        if(northWestExit != null) {
+            description += "northEast ";
+        }
+        if(southEastExit != null) {
+            description += "southEast ";
+        }      
+        
         return description;
     }
 

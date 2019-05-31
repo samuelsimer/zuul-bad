@@ -46,13 +46,13 @@ public class Game
         islaTesoro = new Room("en a la isla del tesoro");
 
         // initialise room exits
-        puerto.setExits(islaCalabera, islaMonos, islaDulce, null, islaTortuga);
-        islaCalabera.setExits(null, null, puerto, null, null);        
-        islaMonos.setExits(null, null, cataratas, puerto, null);
-        cataratas.setExits(islaMonos, null, null, islaTortuga, null);
-        islaDulce.setExits(puerto, islaTortuga, null, null, null);
-        islaTortuga.setExits(null, cataratas, islaTesoro, islaDulce, null);
-        islaTesoro.setExits(islaTortuga, null, null, null, null);
+        puerto.setExits(islaCalabera, islaMonos, islaDulce, null, null, islaTortuga);
+        islaCalabera.setExits(null, null, puerto, null, null, islaMonos);        
+        islaMonos.setExits(null, null, cataratas, puerto, null, null);
+        cataratas.setExits(islaMonos, null, null, islaTortuga, null, null);
+        islaDulce.setExits(puerto, islaTortuga, null, null, null, islaTesoro);
+        islaTortuga.setExits(null, cataratas, islaTesoro, islaDulce, islaMonos, null);
+        islaTesoro.setExits(islaTortuga, null, null, null, cataratas, null);
 
         currentRoom = puerto;  // start game in puerto
     }
@@ -147,19 +147,7 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = null;
-        if(direction.equals("north")) {
-            nextRoom = currentRoom.northExit;
-        }
-        if(direction.equals("east")) {
-            nextRoom = currentRoom.eastExit;
-        }
-        if(direction.equals("south")) {
-            nextRoom = currentRoom.southExit;
-        }
-        if(direction.equals("west")) {
-            nextRoom = currentRoom.westExit;
-        }
+        Room nextRoom = currentRoom.getExit(direction);        
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
@@ -172,19 +160,7 @@ public class Game
 
     public void printLocationInfo(){
         System.out.println("You are " + currentRoom.getDescription());
-        System.out.print("Exits: ");
-        if(currentRoom.northExit != null) {
-            System.out.print("north ");
-        }
-        if(currentRoom.eastExit != null) {
-            System.out.print("east ");
-        }
-        if(currentRoom.southExit != null) {
-            System.out.print("south ");
-        }
-        if(currentRoom.westExit != null) {
-            System.out.print("west ");
-        }
+        System.out.println(currentRoom.getExitString());
         System.out.println();
     }
 
