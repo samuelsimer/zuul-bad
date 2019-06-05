@@ -48,11 +48,11 @@ public class Game
         // initialise room exits
         puerto.setExits(islaCalabera, islaMonos, islaDulce, null, null, islaTortuga);
         islaCalabera.setExits(null, null, puerto, null, null, islaMonos);        
-        islaMonos.setExits(null, null, cataratas, puerto, null, null);
+        islaMonos.setExits(null, null, cataratas, puerto, islaCalabera, null);
         cataratas.setExits(islaMonos, null, null, islaTortuga, null, null);
         islaDulce.setExits(puerto, islaTortuga, null, null, null, islaTesoro);
-        islaTortuga.setExits(null, cataratas, islaTesoro, islaDulce, islaMonos, null);
-        islaTesoro.setExits(islaTortuga, null, null, null, cataratas, null);
+        islaTortuga.setExits(null, cataratas, islaTesoro, islaDulce, puerto, null);
+        islaTesoro.setExits(islaTortuga, null, null, null, islaDulce, null);
 
         currentRoom = puerto;  // start game in puerto
     }
