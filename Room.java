@@ -37,29 +37,9 @@ public class Room
         exits = new HashMap<>();
     }
 
-    /**
-     * Define the exits of this room.  Every direction either leads
-     * to another room or is null (no exit there).
-     * @param north The north exit.
-     * @param east The east east.
-     * @param south The south exit.
-     * @param west The west exit.
-     * * @param west The southwest exit.
-     */
-    public void setExits(Room north, Room east, Room south, Room west, Room northWest, Room southEast) 
-    {
-        if(north != null)
-            exits.put("north", north);
-        if(east != null)
-            exits.put("east", east);
-        if(south != null)
-            exits.put("south", south);
-        if(west != null)
-            exits.put("west", west);
-        if(northWest != null)
-            exits.put("northWest", northWest);
-        if(southEast != null)
-            exits.put("southEast", southEast);        
+    
+    public void setExit(String direction, Room room){
+        exits.put(direction, room);
     }
 
     /**
@@ -71,53 +51,7 @@ public class Room
     }
 
     public Room getExit(String direccion){
-        Room roomReturn = null;
-
-        if(direccion.equals("north")){
-            roomReturn = exits.get("north");
-        }
-        if(direccion.equals("south")){
-            roomReturn = exits.get("south");
-        }
-        if(direccion.equals("east")){
-            roomReturn = exits.get("east");
-        }
-        if(direccion.equals("west")){
-            roomReturn = exits.get("west");
-        }
-        if(direccion.equals("northWest")){
-            roomReturn = exits.get("northWest");
-        }
-        if(direccion.equals("southEast")){
-            roomReturn = exits.get("southEast");
-        }
-
-        return roomReturn;
-    }
-
-    public String getExitString(){
-        String description = "Exit: ";
-
-        if(exits.get("north") != null) {
-            description += "north ";
-        }
-        if(exits.get("east") != null) {
-            description += "east ";
-        }
-        if(exits.get("south") != null) {
-            description += "south ";
-        }
-        if(exits.get("west") != null) {
-            description += "west ";
-        }
-        if(exits.get("northWest") != null) {
-            description += "northWest";
-        }
-        if(exits.get("southEast") != null) {
-            description += "southEast ";
-        }      
-
-        return description;
+        return exits.get(direccion);
     }
 
 }
