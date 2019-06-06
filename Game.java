@@ -35,15 +35,18 @@ public class Game
     private void createRooms()
     {
         Room islaCalabera, puerto, islaMonos, cataratas, islaDulce, islaTortuga, islaTesoro;
+        Item calavera, tesoro;
 
-        // create the rooms
-        islaCalabera = new Room("en la isla de las calaberas");
-        puerto = new Room("en el puerto");
-        islaMonos = new Room("en la isla de los monos");
-        cataratas = new Room("en las cataratas");
-        islaDulce = new Room("en la isla de los dulces");
-        islaTortuga = new Room("en la isla de las tortugas");
-        islaTesoro = new Room("en a la isla del tesoro");
+        // create the rooms and Items
+        calavera = new Item("gran calabera", 300);
+        tesoro = new Item("un cofre lleno de joyas y oro", 8000);
+        islaCalabera = new Room("en la isla de las calaberas", calavera);
+        puerto = new Room("en el puerto", null);
+        islaMonos = new Room("en la isla de los monos", null);
+        cataratas = new Room("en las cataratas", null);
+        islaDulce = new Room("en la isla de los dulces", null);
+        islaTortuga = new Room("en la isla de las tortugas", null);
+        islaTesoro = new Room("en a la isla del tesoro", tesoro);
 
         // initialise room exits
         puerto.setExit("north", islaCalabera);
