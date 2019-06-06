@@ -38,7 +38,6 @@ public class Room
         exits = new HashMap<>();
     }
 
-    
     public void setExit(String direction, Room room){
         exits.put(direction, room);
     }
@@ -54,7 +53,7 @@ public class Room
     public Room getExit(String direccion){
         return exits.get(direccion);
     }
-    
+
     public String getExitString(){
         Set<String> namesExits = exits.keySet();
         String exit = "Exit: ";
@@ -62,6 +61,16 @@ public class Room
             exit += direction + " ";
         }        
         return exit;
+    }
+
+    /**
+     * Devuelve un texto con la descripcion larga de la habitacion del tipo:
+     *     You are in the 'name of room'
+     *     Exits: north west southwest
+     * @return Una descripcion de la habitacion incluyendo sus salidas
+     */
+    public String getLongDescription(){        
+        return "you are " + description + "\n" +getExitString();
     }
 
 }
