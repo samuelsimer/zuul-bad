@@ -24,6 +24,6 @@ public class Item
     }
     
     public String toString(){
-        return description + " peso:" + weight;
+        return description + "--> peso:" + weight;
     }
 }
