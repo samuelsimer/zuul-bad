@@ -19,6 +19,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Room[] rooms;
 
     /**
      * Create the game and initialise its internal map.
@@ -27,6 +28,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        rooms = new Room[2];
     }
 
     /**
@@ -51,14 +53,13 @@ public class Game
         islaTesoro.addItem(tesoro);
         islaCalabera.addItem(calavera);
         islaCalabera.addItem(collarHuesos);
-        
 
         // initialise room exits
         puerto.setExit("north", islaCalabera);
         puerto.setExit("east", islaMonos);
         puerto.setExit("south", islaDulce);
         puerto.setExit("southEast", islaTortuga);
-        islaCalabera.setExit("south", islaMonos);
+        islaCalabera.setExit("south", puerto);
         islaCalabera.setExit("southEast", islaMonos);
         islaMonos.setExit("west", puerto);
         islaMonos.setExit("south", cataratas);
@@ -139,6 +140,9 @@ public class Game
         else if (commandWord.equals("eat")) {	
             eat();
         }
+        else if (commandWord.equals("back")) {
+            back();
+        }
 
         return wantToQuit;
     }
@@ -173,24 +177,48 @@ public class Game
      */
     private void goRoom(Command command) 
     {
+        String direction = command.getSecondWord();
+
+        // Try to leave current room.
+        Room nextRoom = currentRoom.getExit(direction);  
+
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
             return;
         }
 
-        String direction = command.getSecondWord();
-
-        // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);        
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            currentRoom = nextRoom;
+
+            if(rooms[0]==null){
+                rooms[0] = currentRoom;
+            }
+            else if(rooms[1]==null){
+                rooms[1] = currentRoom;
+            }
+            else{
+                Room roomTemp = rooms[1];
+                rooms[0] = roomTemp;
+                rooms[1] = currentRoom;
+            }
+            currentRoom = nextRoom;            
             printLocationInfo();
+        } 
+    }
+
+    private void back(){
+        if(rooms[1] != null){
+            currentRoom = rooms[1];
+            rooms[1] =  null;
         }
+        else {
+            currentRoom = rooms[0];
+        }
+        printLocationInfo();
     }
 
     private void printLocationInfo(){
