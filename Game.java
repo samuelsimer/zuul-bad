@@ -46,12 +46,12 @@ public class Game
         Item calabera, tesoro, huesos, caramelos, caparazon, llave;
 
         // create the rooms and Items
-        huesos = new Item("huesos", 250);
-        calabera = new Item("calabera", 300);
-        tesoro = new Item("cofre", 800);
-        caramelos = new Item("caramelos", 300);
-        caparazon = new Item("caparazon", 500);
-        llave = new Item("llave", 10);
+        huesos = new Item("huesos", "huesos varios", 250, false);
+        calabera = new Item("calabera", "gran calabera", 300, true);
+        tesoro = new Item("cofre", "cofre lleno de joyas y oro", 800, true);
+        caramelos = new Item("caramelos", "bolsa llena de caramelos", 300, true);
+        caparazon = new Item("caparazon", "caparazon de tortuga gigante", 500, true);
+        llave = new Item("llave", "llave de algun lugar", 10, true);
         
         islaCalabera = new Room("en la isla de las calaberas");
         puerto = new Room("en el puerto");
@@ -212,7 +212,7 @@ public class Game
      * Coger un Item de una sala.
      */
     private void take(String item) {    
-        if(!currentRoom.lookItems().equals("") && weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight){
+        if(!currentRoom.lookItems().equals("") && weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight && currentRoom.searchItem(item).getCanBePickedUp()){
             weightInBag += currentRoom.searchItem(item).getWeight();
             bag.add(currentRoom.searchItem(item));
             currentRoom.dropItem(currentRoom.searchItem(item));
@@ -225,7 +225,7 @@ public class Game
     private Item chooseItem(String searchItem){
         Item theItem = null;        
         for(Item currentItem : bag){
-            if (currentItem.getDescription().equals(searchItem)){                            
+            if (currentItem.getId().equals(searchItem)){                            
                     theItem = currentItem;                                  
             }
         }
@@ -250,7 +250,7 @@ public class Game
         if(!bag.isEmpty()){
             for(Item currentItem : bag){
                 if(currentItem != null){
-                    System.out.println(currentItem.getDescription());
+                    System.out.println(currentItem.toString());
                 }            
             }  
         }

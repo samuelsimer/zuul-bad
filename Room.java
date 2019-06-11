@@ -66,7 +66,7 @@ public class Room
     public Item searchItem(String searchItem){
         Item theItem = null;
         for(Item currentItem : items){
-            if (currentItem.getDescription().equals(searchItem)){
+            if (currentItem.getId().equals(searchItem)){
                 theItem = currentItem;
             }
         }
@@ -116,7 +116,7 @@ public class Room
         text = "you are " + description + "\n"+ getExitString();;
         if (!items.isEmpty()){
             for(int i = 0; i < items.size(); i++){
-                text += "\n" + "objeto: " + items.get(i).toString();
+                text += "\n" + items.get(i).toString();
             }
         }
         return text;  
