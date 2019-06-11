@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.ArrayList;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -22,7 +23,9 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private Stack<Room> rooms;
-
+    private ArrayList<Item> bag;
+    private static int overWeight = 800; 
+    private int weightInBag = 0;
     /**
      * Create the game and initialise its internal map.
      */
@@ -31,6 +34,7 @@ public class Game
         createRooms();
         parser = new Parser();
         rooms = new Stack<Room>();
+        bag = new ArrayList<Item>();
     }
 
     /**
@@ -39,12 +43,16 @@ public class Game
     private void createRooms()
     {
         Room islaCalabera, puerto, islaMonos, cataratas, islaDulce, islaTortuga, islaTesoro;
-        Item calavera, tesoro, collarHuesos;
+        Item calabera, tesoro, huesos, caramelos, caparazon, llave;
 
         // create the rooms and Items
-        collarHuesos = new Item("collar de huesos", 250);
-        calavera = new Item("gran calabera", 300);
-        tesoro = new Item("un cofre lleno de joyas y oro", 8000);
+        huesos = new Item("huesos", 250);
+        calabera = new Item("calabera", 300);
+        tesoro = new Item("cofre", 800);
+        caramelos = new Item("caramelos", 300);
+        caparazon = new Item("caparazon", 500);
+        llave = new Item("llave", 10);
+        
         islaCalabera = new Room("en la isla de las calaberas");
         puerto = new Room("en el puerto");
         islaMonos = new Room("en la isla de los monos");
@@ -53,8 +61,11 @@ public class Game
         islaTortuga = new Room("en la isla de las tortugas");
         islaTesoro = new Room("en a la isla del tesoro");
         islaTesoro.addItem(tesoro);
-        islaCalabera.addItem(calavera);
-        islaCalabera.addItem(collarHuesos);
+        islaCalabera.addItem(calabera);
+        islaCalabera.addItem(huesos);
+        islaDulce.addItem(caramelos);
+        islaTortuga.addItem(caparazon);
+        puerto.addItem(llave);
 
         // initialise room exits
         puerto.setExit("north", islaCalabera);
@@ -136,14 +147,26 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
-        else if (commandWord.equals("look")) {	
+        else if (commandWord.equals("look")) {  
             look();
         }
-        else if (commandWord.equals("eat")) {	
+        else if (commandWord.equals("eat")) {   
             eat();
         }
         else if (commandWord.equals("back")) {
             back();
+        }
+        else if (commandWord.equals("take")) {
+            take(command.getSecondWord());
+        }
+        else if (commandWord.equals("drop")) {
+            drop(command.getSecondWord());
+        }
+        else if (commandWord.equals("items")) {
+            items();
+        }
+        else if (commandWord.equals("weight")) {
+            getWeight();
         }
 
         return wantToQuit;
@@ -159,19 +182,83 @@ public class Game
     private void printHelp() 
     {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("you are in the middle of mysterious islands");
         System.out.println();
         System.out.println("Your command words are:");
         System.out.println(parser.getCommandList());
     }
+    
+    /**
+     * Muestra el peso qu ellevas en tu mochila actualmente, el peso maximo que puedes cargar y el peso que te queda para llegar a tu maximo.
+     */
+    private void getWeight() {   
+        System.out.println("el peso de tu mochila es actualmente: " + weightInBag);
+        System.out.println("el maximo que puedes cargar es: " + overWeight);
+        System.out.println("te queda: " + (overWeight - weightInBag) + "espacio libre en tu mochila");        
+    }
 
-    private void look() {	
+    /**
+     * Muestra la informacion de la sala actual.
+     */
+    private void look() {   
         System.out.println(currentRoom.getLongDescription());
     }
 
-    private void eat() {	
+    private void eat() {    
         System.out.println("You have eaten now and you are not hungry any more");
-    }    
+    }
+
+    /**
+     * Coger un Item de una sala.
+     */
+    private void take(String item) {    
+        if(!currentRoom.lookItems().equals("") && weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight){
+            weightInBag += currentRoom.searchItem(item).getWeight();
+            bag.add(currentRoom.searchItem(item));
+            currentRoom.dropItem(currentRoom.searchItem(item));
+        }
+    }
+
+    /**
+     * Encuentra un item en la mochila.
+     */
+    private Item chooseItem(String searchItem){
+        Item theItem = null;        
+        for(Item currentItem : bag){
+            if (currentItem.getDescription().equals(searchItem)){                            
+                    theItem = currentItem;                                  
+            }
+        }
+        return theItem;
+    }
+
+    /**
+     * Dejar un Item en una sala.
+     */
+    private void drop(String item) {    
+        if(!bag.isEmpty()){
+            weightInBag -= chooseItem(item).getWeight();
+            currentRoom.addItem(chooseItem(item));
+            bag.remove(chooseItem(item));
+        }
+    }
+
+    /**
+     * Devuelve todos los item que posees en ese momento.
+     */
+    private void items() {       
+        if(!bag.isEmpty()){
+            for(Item currentItem : bag){
+                if(currentItem != null){
+                    System.out.println(currentItem.getDescription());
+                }            
+            }  
+        }
+        else {
+            System.out.println("you dont have items in your bag");
+        }
+
+    }
 
     /** 
      * Try to go in one direction. If there is an exit, enter
@@ -205,7 +292,7 @@ public class Game
         if(!rooms.isEmpty()){
             currentRoom = rooms.pop();
         }
-        
+
         printLocationInfo();
     }
 

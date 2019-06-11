@@ -28,7 +28,6 @@ public class Room
     private HashMap<String, Room> exits;
     private Item object;
     private ArrayList<Item> items;
-    
 
     /**
      * Create a room described "description". Initially, it has
@@ -46,11 +45,44 @@ public class Room
     public void setExit(String direction, Room room){
         exits.put(direction, room);
     }
-    
+
+    /**
+     * Añade un item a la sala.
+     */
     public void addItem(Item item){
         items.add(item);
     }
-    
+
+    /**
+     * Elimina un item a la sala.
+     */
+    public void dropItem(Item item){
+        items.remove(item);
+    }
+
+    /**
+     * Encuentra un item de la sala.
+     */
+    public Item searchItem(String searchItem){
+        Item theItem = null;
+        for(Item currentItem : items){
+            if (currentItem.getDescription().equals(searchItem)){
+                theItem = currentItem;
+            }
+        }
+        return theItem;
+    }
+
+    /**
+     * Muestra todos los Item de la sala.
+     */
+    public String lookItems(){
+        String allItems = "";
+        for(Item currentItem : items){
+            allItems += currentItem.getDescription();
+        }
+        return allItems;
+    }
 
     /**
      * @return The description of the room.
@@ -84,8 +116,8 @@ public class Room
         text = "you are " + description + "\n"+ getExitString();;
         if (!items.isEmpty()){
             for(int i = 0; i < items.size(); i++){
-            text += "\n" + "objeto: " + items.get(i).toString();
-        }
+                text += "\n" + "objeto: " + items.get(i).toString();
+            }
         }
         return text;  
     }
