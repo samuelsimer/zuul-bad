@@ -6,15 +6,18 @@ public class Player
     private Room currentRoom;
     private Stack<Room> rooms;
     private ArrayList<Item> bag;
-    private static int overWeight = 800; 
-    private int weightInBag;   
+    private int overWeight; 
+    private int weightInBag;
+    private boolean maxWeight;
 
-    public Player()
+    public Player(boolean yesOrNoMaxWeight, int fullWeight)
     {
         rooms = new Stack<Room>();
         currentRoom = null;
         bag = new ArrayList<Item>();
         weightInBag = 0;
+        maxWeight = yesOrNoMaxWeight;
+        overWeight = fullWeight;
     }
 
     public void setCurrentRoom(Room room){
@@ -25,7 +28,7 @@ public class Player
         return currentRoom;
     }
 
-    public void look() {	
+    public void look() {    
         System.out.println(currentRoom.getLongDescription());
     }
 
@@ -34,22 +37,34 @@ public class Player
      */
     public void getWeight() {   
         System.out.println("el peso de tu mochila es actualmente: " + weightInBag);
-        System.out.println("el maximo que puedes cargar es: " + overWeight);
-        System.out.println("te queda: " + (overWeight - weightInBag) + "espacio libre en tu mochila");        
+        if(maxWeight){
+            System.out.println("el maximo que puedes cargar es: " + overWeight);
+            System.out.println("te queda: " + (overWeight - weightInBag) + "espacio libre en tu mochila");   
+        }
+
     }
 
     /**
      * Coger un Item de una sala.
      */
     public void take(String item) {    
-        if(!currentRoom.lookItems().equals("") && weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight && currentRoom.searchItem(item).getCanBePickedUp()){
-            weightInBag += currentRoom.searchItem(item).getWeight();
-            bag.add(currentRoom.searchItem(item));
-            currentRoom.dropItem(currentRoom.searchItem(item));
+        if(!currentRoom.lookItems().equals("") && currentRoom.searchItem(item).getCanBePickedUp()){
+            if(maxWeight){
+                if( weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight){
+                    weightInBag += currentRoom.searchItem(item).getWeight();
+                    bag.add(currentRoom.searchItem(item));
+                    currentRoom.dropItem(currentRoom.searchItem(item)); 
+                }
+            } 
+            else{
+                bag.add(currentRoom.searchItem(item));
+                currentRoom.dropItem(currentRoom.searchItem(item)); 
+            }
+
         }
     }
 
-    public void eat() {	
+    public void eat() { 
         System.out.println("You have eaten now and you are not hungry any more");
     }    
 
@@ -80,8 +95,8 @@ public class Player
             look();
         } 
     }
-    
-        /**
+
+    /**
      * Devuelve todos los item que posees en ese momento.
      */
     public void items() {       
@@ -98,7 +113,6 @@ public class Player
 
     }
 
-
     public void back(){
         if(!rooms.isEmpty()){
             currentRoom = rooms.pop();
@@ -106,15 +120,15 @@ public class Player
 
         look();
     }
-    
-        /**
+
+    /**
      * Encuentra un item en la mochila.
      */
     public Item chooseItem(String searchItem){
         Item theItem = null;        
         for(Item currentItem : bag){
             if (currentItem.getId().equals(searchItem)){                            
-                    theItem = currentItem;                                  
+                theItem = currentItem;                                  
             }
         }
         return theItem;
@@ -125,7 +139,9 @@ public class Player
      */
     public void drop(String item) {    
         if(!bag.isEmpty()){
-            weightInBag -= chooseItem(item).getWeight();
+            if(maxWeight){
+                weightInBag -= chooseItem(item).getWeight();
+            }
             currentRoom.addItem(chooseItem(item));
             bag.remove(chooseItem(item));
         }

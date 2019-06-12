@@ -29,10 +29,10 @@ public class Game
     public Game() 
     {        
         parser = new Parser();
-        player = new Player();
+        player = new Player(true, 800);
         createRooms();
         player.setCurrentRoom(createRooms());  // start game in puerto
-        
+
     }
 
     /**
@@ -50,7 +50,7 @@ public class Game
         caramelos = new Item("caramelos", "bolsa llena de caramelos", 300, true);
         caparazon = new Item("caparazon", "caparazon de tortuga gigante", 500, true);
         llave = new Item("llave", "llave de algun lugar", 10, true);
-        
+
         islaCalabera = new Room("en la isla de las calaberas");
         puerto = new Room("en el puerto");
         islaMonos = new Room("en la isla de los monos");
@@ -184,7 +184,7 @@ public class Game
         System.out.println("Your command words are:");
         System.out.println(parser.getCommandList());
     }
-    
+
     /** 
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.
