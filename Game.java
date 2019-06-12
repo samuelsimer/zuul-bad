@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.ArrayList;
 
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -31,6 +32,7 @@ public class Game
         player = new Player();
         createRooms();
         player.setCurrentRoom(createRooms());  // start game in puerto
+        
     }
 
     /**
@@ -39,12 +41,16 @@ public class Game
     private Room createRooms()
     {
         Room islaCalabera, puerto, islaMonos, cataratas, islaDulce, islaTortuga, islaTesoro;
-        Item calavera, tesoro, collarHuesos;
+        Item calabera, tesoro, huesos, caramelos, caparazon, llave;
 
         // create the rooms and Items
-        collarHuesos = new Item("collar de huesos", 250);
-        calavera = new Item("gran calabera", 300);
-        tesoro = new Item("un cofre lleno de joyas y oro", 8000);
+        huesos = new Item("huesos", "huesos varios", 250, false);
+        calabera = new Item("calabera", "gran calabera", 300, true);
+        tesoro = new Item("cofre", "cofre lleno de joyas y oro", 800, true);
+        caramelos = new Item("caramelos", "bolsa llena de caramelos", 300, true);
+        caparazon = new Item("caparazon", "caparazon de tortuga gigante", 500, true);
+        llave = new Item("llave", "llave de algun lugar", 10, true);
+        
         islaCalabera = new Room("en la isla de las calaberas");
         puerto = new Room("en el puerto");
         islaMonos = new Room("en la isla de los monos");
@@ -53,8 +59,11 @@ public class Game
         islaTortuga = new Room("en la isla de las tortugas");
         islaTesoro = new Room("en a la isla del tesoro");
         islaTesoro.addItem(tesoro);
-        islaCalabera.addItem(calavera);
-        islaCalabera.addItem(collarHuesos);
+        islaCalabera.addItem(calabera);
+        islaCalabera.addItem(huesos);
+        islaDulce.addItem(caramelos);
+        islaTortuga.addItem(caparazon);
+        puerto.addItem(llave);
 
         // initialise room exits
         puerto.setExit("north", islaCalabera);
@@ -144,6 +153,18 @@ public class Game
         else if (commandWord.equals("back")) {
             player.back();
         }
+        else if (commandWord.equals("take")) {
+            player.take(command.getSecondWord());
+        }
+        else if (commandWord.equals("drop")) {
+            player.drop(command.getSecondWord());
+        }
+        else if (commandWord.equals("items")) {
+            player.items();
+        }
+        else if (commandWord.equals("weight")) {
+            player.getWeight();
+        }
 
         return wantToQuit;
     }
@@ -158,12 +179,12 @@ public class Game
     private void printHelp() 
     {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("you are in the middle of mysterious islands");
         System.out.println();
         System.out.println("Your command words are:");
         System.out.println(parser.getCommandList());
     }
-
+    
     /** 
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.
