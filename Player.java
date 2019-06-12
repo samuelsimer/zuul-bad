@@ -106,7 +106,10 @@ public class Player
                 if(currentItem != null){
                     System.out.println(currentItem.toString());
                     allWeight += currentItem.getWeight();
-                }            
+                }
+                if(currentItem == null){
+                    bag.remove(currentItem);
+                }
             }
             System.out.println("el peso total que llevas en tu mochila es: " + allWeight);
         }
@@ -116,11 +119,28 @@ public class Player
 
     }
 
+    /**
+     * Devuelve todos los item que posees en ese momento.
+     */
+    public String itemsInString() {       
+        String textItems = "";
+        if(!bag.isEmpty()){
+            for(Item currentItem : bag){
+                if(currentItem != null){
+                    textItems += currentItem.getId();
+                }
+                if(currentItem == null){
+                    bag.remove(currentItem);
+                }
+            }            
+        }
+        return textItems;
+    }
+
     public void back(){
         if(!rooms.isEmpty()){
             currentRoom = rooms.pop();
         }
-
         look();
     }
 
@@ -147,6 +167,19 @@ public class Player
             }
             currentRoom.addItem(chooseItem(item));
             bag.remove(chooseItem(item));
+        }
+    }
+
+    public void openTreasure(){
+        if(currentRoom.lookItems().contains("llave") && itemsInString().equals("cofre")){
+            Item oro = new Item("oro", "monedas de oro del cofre pirata", 100, true);
+            Item joyas = new Item("joyas", "las mejores y mas caras joyas que existen en este mundo", 100, true);
+            for(int i = 0; i < bag.size(); i++){
+                bag.remove(i);
+            }
+            bag.add(oro);
+            bag.add(joyas);
+            System.out.println("¡¡¡Enhorabuena!!! ahora tienes oro y joyas en tu mochila, ¡¡¡Es hora de triunfar en el mundo pirata!!!");
         }
     }
 
