@@ -101,11 +101,14 @@ public class Player
      */
     public void items() {       
         if(!bag.isEmpty()){
+            int allWeight = 0;
             for(Item currentItem : bag){
                 if(currentItem != null){
                     System.out.println(currentItem.toString());
+                    allWeight += currentItem.getWeight();
                 }            
-            }  
+            }
+            System.out.println("el peso total que llevas en tu mochila es: " + allWeight);
         }
         else {
             System.out.println("you dont have items in your bag");
