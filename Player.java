@@ -6,15 +6,18 @@ public class Player
     private Room currentRoom;
     private Stack<Room> rooms;
     private ArrayList<Item> bag;
-    private static int overWeight = 800; 
-    private int weightInBag;   
+    private int overWeight; 
+    private int weightInBag;
+    private boolean maxWeight;
 
-    public Player()
+    public Player(boolean yesOrNoMaxWeight, int fullWeight)
     {
         rooms = new Stack<Room>();
         currentRoom = null;
         bag = new ArrayList<Item>();
         weightInBag = 0;
+        maxWeight = yesOrNoMaxWeight;
+        overWeight = fullWeight;
     }
 
     public void setCurrentRoom(Room room){
@@ -25,7 +28,7 @@ public class Player
         return currentRoom;
     }
 
-    public void look() {	
+    public void look() {    
         System.out.println(currentRoom.getLongDescription());
     }
 
@@ -34,22 +37,34 @@ public class Player
      */
     public void getWeight() {   
         System.out.println("el peso de tu mochila es actualmente: " + weightInBag);
-        System.out.println("el maximo que puedes cargar es: " + overWeight);
-        System.out.println("te queda: " + (overWeight - weightInBag) + "espacio libre en tu mochila");        
+        if(maxWeight){
+            System.out.println("el maximo que puedes cargar es: " + overWeight);
+            System.out.println("te queda: " + (overWeight - weightInBag) + "espacio libre en tu mochila");   
+        }
+
     }
 
     /**
      * Coger un Item de una sala.
      */
     public void take(String item) {    
-        if(!currentRoom.lookItems().equals("") && weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight && currentRoom.searchItem(item).getCanBePickedUp()){
-            weightInBag += currentRoom.searchItem(item).getWeight();
-            bag.add(currentRoom.searchItem(item));
-            currentRoom.dropItem(currentRoom.searchItem(item));
+        if(!currentRoom.lookItems().equals("") && currentRoom.searchItem(item).getCanBePickedUp()){
+            if(maxWeight){
+                if( weightInBag + currentRoom.searchItem(item).getWeight() <= overWeight){
+                    weightInBag += currentRoom.searchItem(item).getWeight();
+                    bag.add(currentRoom.searchItem(item));
+                    currentRoom.dropItem(currentRoom.searchItem(item)); 
+                }
+            } 
+            else{
+                bag.add(currentRoom.searchItem(item));
+                currentRoom.dropItem(currentRoom.searchItem(item)); 
+            }
+
         }
     }
 
-    public void eat() {	
+    public void eat() { 
         System.out.println("You have eaten now and you are not hungry any more");
     }    
 
@@ -80,17 +95,23 @@ public class Player
             look();
         } 
     }
-    
-        /**
+
+    /**
      * Devuelve todos los item que posees en ese momento.
      */
     public void items() {       
         if(!bag.isEmpty()){
+            int allWeight = 0;
             for(Item currentItem : bag){
                 if(currentItem != null){
                     System.out.println(currentItem.toString());
-                }            
-            }  
+                    allWeight += currentItem.getWeight();
+                }
+                if(currentItem == null){
+                    bag.remove(currentItem);
+                }
+            }
+            System.out.println("el peso total que llevas en tu mochila es: " + allWeight);
         }
         else {
             System.out.println("you dont have items in your bag");
@@ -98,23 +119,39 @@ public class Player
 
     }
 
+    /**
+     * Devuelve todos los item que posees en ese momento.
+     */
+    public String itemsInString() {       
+        String textItems = "";
+        if(!bag.isEmpty()){
+            for(Item currentItem : bag){
+                if(currentItem != null){
+                    textItems += currentItem.getId();
+                }
+                if(currentItem == null){
+                    bag.remove(currentItem);
+                }
+            }            
+        }
+        return textItems;
+    }
 
     public void back(){
         if(!rooms.isEmpty()){
             currentRoom = rooms.pop();
         }
-
         look();
     }
-    
-        /**
+
+    /**
      * Encuentra un item en la mochila.
      */
     public Item chooseItem(String searchItem){
         Item theItem = null;        
         for(Item currentItem : bag){
             if (currentItem.getId().equals(searchItem)){                            
-                    theItem = currentItem;                                  
+                theItem = currentItem;                                  
             }
         }
         return theItem;
@@ -125,9 +162,24 @@ public class Player
      */
     public void drop(String item) {    
         if(!bag.isEmpty()){
-            weightInBag -= chooseItem(item).getWeight();
+            if(maxWeight){
+                weightInBag -= chooseItem(item).getWeight();
+            }
             currentRoom.addItem(chooseItem(item));
             bag.remove(chooseItem(item));
+        }
+    }
+
+    public void openTreasure(){
+        if(currentRoom.lookItems().contains("llave") && itemsInString().equals("cofre")){
+            Item oro = new Item("oro", "monedas de oro del cofre pirata", 100, true);
+            Item joyas = new Item("joyas", "las mejores y mas caras joyas que existen en este mundo", 100, true);
+            for(int i = 0; i < bag.size(); i++){
+                bag.remove(i);
+            }
+            bag.add(oro);
+            bag.add(joyas);
+            System.out.println("¡¡¡Enhorabuena!!! ahora tienes oro y joyas en tu mochila, ¡¡¡Es hora de triunfar en el mundo pirata!!!");
         }
     }
 

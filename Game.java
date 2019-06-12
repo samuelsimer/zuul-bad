@@ -29,10 +29,10 @@ public class Game
     public Game() 
     {        
         parser = new Parser();
-        player = new Player();
+        player = new Player(true, 800);
         createRooms();
         player.setCurrentRoom(createRooms());  // start game in puerto
-        
+
     }
 
     /**
@@ -49,15 +49,15 @@ public class Game
         tesoro = new Item("cofre", "cofre lleno de joyas y oro", 800, true);
         caramelos = new Item("caramelos", "bolsa llena de caramelos", 300, true);
         caparazon = new Item("caparazon", "caparazon de tortuga gigante", 500, true);
-        llave = new Item("llave", "llave de algun lugar", 10, true);
-        
+        llave = new Item("llave", "llave de algun lugar(consejo: quiza quieras guardarla para mas adelante...)", 10, true);
+
         islaCalabera = new Room("en la isla de las calaberas");
         puerto = new Room("en el puerto");
         islaMonos = new Room("en la isla de los monos");
         cataratas = new Room("en las cataratas");
         islaDulce = new Room("en la isla de los dulces");
         islaTortuga = new Room("en la isla de las tortugas");
-        islaTesoro = new Room("en a la isla del tesoro");
+        islaTesoro = new Room("en a la isla del tesoro(consejo: para conseguit el tesoro deberas tener solo el cofre en tus item y dejar algo en esta sala...)");
         islaTesoro.addItem(tesoro);
         islaCalabera.addItem(calabera);
         islaCalabera.addItem(huesos);
@@ -83,9 +83,7 @@ public class Game
         islaTortuga.setExit("east", cataratas);
         islaTortuga.setExit("south", islaTesoro);
         islaTortuga.setExit("west", islaDulce);
-        islaTortuga.setExit("northWest", puerto);
-        islaTesoro.setExit("north", islaTortuga);
-        islaTesoro.setExit("northWest", islaDulce);
+        islaTortuga.setExit("northWest", puerto);       
 
         return puerto; //retorna la sala inicial
     }
@@ -165,6 +163,9 @@ public class Game
         else if (commandWord.equals("weight")) {
             player.getWeight();
         }
+        else if (commandWord.equals("openTreasure")) {
+            player.openTreasure();
+        }
 
         return wantToQuit;
     }
@@ -184,7 +185,7 @@ public class Game
         System.out.println("Your command words are:");
         System.out.println(parser.getCommandList());
     }
-    
+
     /** 
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game.
